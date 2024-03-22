@@ -13,7 +13,8 @@ ourApp.get('/about', (req, res) => {
 })
 
 ourApp.post('/createItem', (req, res) => {
-    let itemValue = req.valueOf();
+        let itemValue = req.body.item;
+        console.log(console.log('itemValue: ', itemValue))
 
         res.send(`
         <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">

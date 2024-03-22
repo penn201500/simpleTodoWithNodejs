@@ -11,9 +11,9 @@
     <h1 class="display-4 text-center py-1">To-Do App</h1>
 
     <div class="jumbotron p-3 shadow-sm">
-        <form>
+        <form action="/createItem" method="POST">
             <div class="d-flex align-items-center">
-                <input autofocus autocomplete="off" class="form-control me-3" type="text" style="flex: 1;">
+                <input name="item" placeholder="Enter New To-Do" autofocus autocomplete="off" class="form-control me-3" type="text" style="flex: 1;">
                 <button class="btn btn-primary">Add New Item</button>
             </div>
         </form>
