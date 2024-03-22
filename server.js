@@ -3,12 +3,16 @@
 let express = require("express")
 let path = require('path')
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const {urlencoded} = require("express");
+require('dotenv').config()
 let ourApp = express()
-let username = ""
-let password = ""
+let userName = process.env.DB_USERNAME
+let password = encodeURIComponent(process.env.DB_PASSWORD)
+let dbHost = process.env.DB_HOST
+let appName = process.env.APP_NAME
 let dbName = "TodoApp"
 let listeningPort = 3000
-const uri = `mongodb+srv://${username}:${password}@cluster0.pmdaunw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${userName}:${password}@${dbHost}/?retryWrites=true&w=majority&appName=${appName}`;
 let db
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
