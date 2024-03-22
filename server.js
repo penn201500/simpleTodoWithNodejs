@@ -18,7 +18,7 @@ ourApp.post('/createItem', (req, res) => {
 
         res.send(`
         <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-            <span class="item-text">Fake example item #3</span>
+            <span class="item-text">${itemValue}</span>
             <div>
                 <button class="edit-me btn btn-secondary btn-sm me-1">Edit</button>
                 <button class="delete-me btn btn-danger btn-sm">Delete</button>
