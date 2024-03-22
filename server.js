@@ -30,12 +30,13 @@ async function run() {
         await client.connect();
         // Send a ping to confirm a successful connection
         await client.db(dbName).command({ ping: 1 });
+        db = await client.db(dbName);
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
-        db = client.db(dbName)
-        ourApp.listen(listeningPort)
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
+        ourApp.listen(listeningPort, () => {
+            console.log(`server is running on port ${listeningPort}`)
+        })
+    } catch (e) {
+        console.error(e);
     }
 }
 run().catch(console.dir);
