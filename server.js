@@ -8,6 +8,7 @@ let userName = process.env.DB_USERNAME
 let password = encodeURIComponent(process.env.DB_PASSWORD)
 let dbHost = process.env.DB_HOST
 let appName = process.env.APP_NAME
+let dbCollection = process.env.DB_COLLECTION
 let dbName = "TodoApp"
 let listeningPort = 3000
 const uri = `mongodb+srv://${userName}:${password}@${dbHost}/?retryWrites=true&w=majority&appName=${appName}`;
@@ -46,7 +47,7 @@ ourApp.use(express.static('public'))
 ourApp.use(express.json())
 
 ourApp.get('/', async (req, res) => {
-    const items = await db.collection('items').find().toArray((err, result) => {
+    const items = await db.collection(dbCollection).find().toArray((err, result) => {
         if (err) return console.log(err)
     })
     res.send(`
@@ -97,19 +98,19 @@ ourApp.get('/about', (req, res) => {
 
 ourApp.post('/createItem', async (req, res) => {
         let itemValue = req.body.item;
-        await db.collection('items').insertOne({text: itemValue})
+        await db.collection(dbCollection).insertOne({text: itemValue})
         res.redirect('/')
     }
 )
 
 ourApp.post('/update-item', async (req, res) => {
     let itemValue = req.body.text;
-    await db.collection('items').findOneAndUpdate({_id: new ObjectId(req.body.id)}, {$set: {text: itemValue}})
+    await db.collection(dbCollection).findOneAndUpdate({_id: new ObjectId(req.body.id)}, {$set: {text: itemValue}})
     res.send('success')
 })
 
 ourApp.post('/delete-item', async (req, res) => {
-    await db.collection('items').deleteOne({_id: new ObjectId(req.body.id)})
+    await db.collection(dbCollection).deleteOne({_id: new ObjectId(req.body.id)})
     res.send('success')
 })
 ourApp.use((req, res) => {
