@@ -64,15 +64,15 @@ ourApp.get('/', async (req, res) => {
     <h1 class="display-4 text-center py-1">To-Do App</h1>
 
     <div class="jumbotron p-3 shadow-sm">
-        <form action="/createItem" method="POST">
+        <form id="form" method="POST">
             <div class="d-flex align-items-center">
-                <input name="item" placeholder="Enter New To-Do" autofocus autocomplete="off" class="form-control me-3" type="text" style="flex: 1;">
+                <input id="input-field" name="item" placeholder="Enter New To-Do" autofocus autocomplete="off" class="form-control me-3" type="text" style="flex: 1;">
                 <button class="btn btn-primary">Add New Item</button>
             </div>
         </form>
     </div>
 
-    <ul class="list-group pb-5">
+    <ul id="item-list" class="list-group pb-5">
     ${items.map(item => `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
             <span class="item-text">${item.text}</span>
             <div>
@@ -96,10 +96,10 @@ ourApp.get('/about', (req, res) => {
     res.end('hello, this is about page')
 })
 
-ourApp.post('/createItem', async (req, res) => {
-        let itemValue = req.body.item;
-        await db.collection(dbCollection).insertOne({text: itemValue})
-        res.redirect('/')
+ourApp.post('/create-item', async (req, res) => {
+        let itemValue = req.body.text;
+        let info = await db.collection(dbCollection).insertOne({text: itemValue})
+    res.json({text: itemValue, _id: info.insertedId})
     }
 )
 
