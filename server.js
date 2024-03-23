@@ -1,9 +1,7 @@
 "use strict";
 
 let express = require("express")
-let path = require('path')
-const {MongoClient, ServerApiVersion} = require('mongodb');
-const {urlencoded} = require("express");
+const {MongoClient, ServerApiVersion, ObjectId} = require('mongodb');
 require('dotenv').config()
 let ourApp = express()
 let userName = process.env.DB_USERNAME
@@ -40,9 +38,12 @@ async function run() {
     }
 }
 
+//TODO: how to output log info into a file
 run().catch(console.dir);
 
 ourApp.use(express.urlencoded({extended: false}))
+ourApp.use(express.static('public'))
+ourApp.use(express.json())
 
 ourApp.get('/', async (req, res) => {
     const items = await db.collection('items').find().toArray((err, result) => {
@@ -74,7 +75,7 @@ ourApp.get('/', async (req, res) => {
     ${items.map(item => `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
             <span class="item-text">${item.text}</span>
             <div>
-                <button class="edit-me btn btn-secondary btn-sm me-1">Edit</button>
+                <button data-id=${item._id} class="edit-me btn btn-secondary btn-sm me-1">Edit</button>
                 <button class="delete-me btn btn-danger btn-sm">Delete</button>
             </div>
         </li>
@@ -83,7 +84,8 @@ ourApp.get('/', async (req, res) => {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+<script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+<script src="/todo.js"></script>
 </body>
 </html> 
     `)
@@ -99,6 +101,12 @@ ourApp.post('/createItem', async (req, res) => {
         res.redirect('/')
     }
 )
+
+ourApp.post('/update-item', async (req, res) => {
+    let itemValue = req.body.text;
+    await db.collection('items').findOneAndUpdate({_id: new ObjectId(req.body.id)}, {$set: {text: itemValue}})
+    res.send('success')
+})
 
 ourApp.use((req, res) => {
     res.status(404).send('we cannot find the page you are looking for')
