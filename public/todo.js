@@ -8,6 +8,11 @@ function itemTemplate(item) {
         </li>`
 }
 
+let ourHTML = items.map((item) => {
+        return itemTemplate(item)
+    }
+).join("")
+document.getElementById("item-list").insertAdjacentHTML("beforeend", ourHTML)
 
 document.getElementById("form").addEventListener("submit", (e) => {
         e.preventDefault()

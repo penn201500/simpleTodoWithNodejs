@@ -73,17 +73,12 @@ ourApp.get('/', async (req, res) => {
     </div>
 
     <ul id="item-list" class="list-group pb-5">
-    ${items.map(item => `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-            <span class="item-text">${item.text}</span>
-            <div>
-                <button data-id=${item._id} class="edit-me btn btn-secondary btn-sm me-1">Edit</button>
-                <button data-id=${item._id} class="delete-me btn btn-danger btn-sm">Delete</button>
-            </div>
-        </li>
-        `).join('')}
     </ul>
 </div>
 
+<script>
+let items = ${JSON.stringify(items)}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
 <script src="/todo.js"></script>
