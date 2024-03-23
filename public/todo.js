@@ -8,11 +8,11 @@ function itemTemplate(item) {
         </li>`
 }
 
-let ourHTML = items.map((item) => {
-        return itemTemplate(item)
-    }
-).join("")
-document.getElementById("item-list").insertAdjacentHTML("beforeend", ourHTML)
+// let ourHTML = items.map((item) => {
+//         return itemTemplate(item)
+//     }
+// ).join("")
+// document.getElementById("item-list").insertAdjacentHTML("beforeend", ourHTML)
 
 document.getElementById("form").addEventListener("submit", (e) => {
         e.preventDefault()
@@ -52,3 +52,16 @@ document.addEventListener("click", (e) => {
         }
     }
 })
+
+
+// Add an event listener to fetch items on page load
+document.addEventListener('DOMContentLoaded', function() {
+    axios.get('/get-items').then(function(response) {
+        let ourHTML = response.data.map((item) => {
+            return itemTemplate(item);
+        }).join("");
+        document.getElementById("item-list").insertAdjacentHTML("beforeend", ourHTML);
+    }).catch(function(error) {
+        console.log("There was an error fetching the items:", error);
+    });
+});
