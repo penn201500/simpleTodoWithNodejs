@@ -76,7 +76,7 @@ ourApp.get('/', async (req, res) => {
             <span class="item-text">${item.text}</span>
             <div>
                 <button data-id=${item._id} class="edit-me btn btn-secondary btn-sm me-1">Edit</button>
-                <button class="delete-me btn btn-danger btn-sm">Delete</button>
+                <button data-id=${item._id} class="delete-me btn btn-danger btn-sm">Delete</button>
             </div>
         </li>
         `).join('')}
@@ -108,7 +108,10 @@ ourApp.post('/update-item', async (req, res) => {
     res.send('success')
 })
 
+ourApp.post('/delete-item', async (req, res) => {
+    await db.collection('items').deleteOne({_id: new ObjectId(req.body.id)})
+    res.send('success')
+})
 ourApp.use((req, res) => {
     res.status(404).send('we cannot find the page you are looking for')
-
 })

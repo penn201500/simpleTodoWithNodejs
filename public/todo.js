@@ -9,4 +9,14 @@ document.addEventListener("click", (e) => {
             })
         }
     }
+
+    if (e.target.classList.contains("delete-me")) {
+        if (confirm("Delete this task permanently?")) {
+            axios.post('/delete-item', {id: e.target.getAttribute("data-id")}).then(() => {
+                e.target.parentElement.parentElement.remove()
+            }).catch(() => {
+                console.log("Please try again later")
+            })
+        }
+    }
 })
