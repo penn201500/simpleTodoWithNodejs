@@ -56,7 +56,21 @@ async function closeDBConnection() {
     }
 }
 
+async function isConnected() {
+    try {
+        // Attempt to fetch the server status. This command requires an active connection.
+        const adminDb = client.db("admin");
+        await adminDb.command({ping: 1});
+        logger.info("Database connection is active.");
+        return true; // The command succeeded, so the connection is active
+    } catch (e) {
+        logger.error("Database connection is not active: ", e);
+        return false; // The command failed, so the connection is likely not active
+    }
+}
+
 module.exports = {
+    isConnected,
     connectToDB,
     getDB,
     getCollection,
