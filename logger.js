@@ -1,4 +1,13 @@
 const winston = require("winston");
+require('winston-daily-rotate-file')
+
+const transport = new winston.transports.DailyRotateFile({
+    filename: 'application-%DATE%.log',
+    datePattern: 'YYYY-MM-DD',
+    zippedArchive: true,
+    maxSize: '20m',
+    maxFiles: '14d'
+})
 
 const logger = winston.createLogger({
     level: "info",
@@ -12,12 +21,7 @@ const logger = winston.createLogger({
     ),
     defaultMeta: {service: "Todo App"},
     transports: [
-        //
-        // - Write all logs with level `info` and below to `app.log`
-        // - Write all logs with level `error` and below to `error.log`.
-        //
-        new winston.transports.File({filename: "error.log", level: "error"}),
-        new winston.transports.File({filename: "app.log"})
+        transport
     ]
 });
 
