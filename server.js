@@ -51,15 +51,26 @@ run().catch(async (e) => {
 
 
 // middleware
+ourApp.use(passwordProtected);
 ourApp.use(express.urlencoded({extended: false}));
 ourApp.use(express.static("public"));
 ourApp.use(express.json());
 
 function passwordProtected(req, res, next) {
-    console.log("function test");
-    next();
-}
+    const auth = req.headers.authorization;
+    console.log('auth is', auth);
+    if (auth && auth.startsWith("Basic ")) {
+        const base64Credentials = auth.split(" ")[1];
+        const credentials = Buffer.from(base64Credentials, "base64").toString("ascii");
+        const [username, password] = credentials.split(":");
+        if (username === "test" && password === "test") {
+           return next();
+        }
+    }
 
+    res.set("WWW-Authenticate", 'Basic realm="Simple Todo App"');
+    res.status(401).send("Authentication required");
+}
 
 ourApp.get("/", async (req, res) => {
     res.sendFile(__dirname + "/index.html");
@@ -110,7 +121,7 @@ process.on("SIGINT", async () => {
 );
 
 process.on("SIGTERM", async () => {
-        console.log("Closing MongoDB connection due to app termination");
+        console.log("Closing MongoDB connection due to app normal termination");
         await client.close();
         process.exit(0);
     }
