@@ -35,12 +35,19 @@ async function run() {
             console.log(`server is running on port ${listeningPort}`)
         })
     } catch (e) {
-        console.error(e);
+        console.error(e)
+        await client.close() // ensure the client closes on error
+        process.exit(1) // exit with a failure code
     }
 }
 
 //TODO: how to output log info into a file
-run().catch(console.dir);
+run().catch(async (e) => {
+        console.error(e)
+        await client.close()
+        process.exit(1)
+    }
+)
 
 
 // middleware
@@ -87,3 +94,18 @@ ourApp.post('/delete-item', async (req, res) => {
 ourApp.use((req, res) => {
     res.status(404).send('we cannot find the page you are looking for')
 })
+
+// close the MongoDB connection when the Node.js process ends
+process.on('SIGINT', async () => {
+        console.log("Closing MongoDB connection due to app termination");
+        await client.close()
+        process.exit(0)
+    }
+)
+
+process.on('SIGTERM', async () => {
+        console.log("Closing MongoDB connection due to app termination");
+        await client.close()
+        process.exit(0)
+    }
+)
