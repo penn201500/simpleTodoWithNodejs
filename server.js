@@ -4,6 +4,7 @@ const express = require("express");
 const {ObjectId} = require("mongodb");
 const {connectToDB, getCollection, closeDBConnection} = require("./database");
 const logger = require("./logger");
+const sanitizeHTML = require("sanitize-html");
 
 const ourApp = express();
 const listeningPort = 3000;
@@ -73,7 +74,7 @@ ourApp.get("/about", (req, res) => {
 });
 
 ourApp.post("/create-item", async (req, res) => {
-        let itemValue = req.body.text;
+        let itemValue = sanitizeHTML(req.body.text, {allowedTags: [], allowedAttributes: {}});
         let info = await dbCollection.insertOne({text: itemValue});
         res.json({text: itemValue, _id: info.insertedId});
         logger.info(`Created an item ${info.insertedId}`);
@@ -81,7 +82,7 @@ ourApp.post("/create-item", async (req, res) => {
 );
 
 ourApp.post("/update-item", async (req, res) => {
-    let itemValue = req.body.text;
+    let itemValue = sanitizeHTML(req.body.text, {allowedTags: [], allowedAttributes: {}});
     let itemID = new ObjectId(req.body.id);
     await dbCollection.findOneAndUpdate({_id: itemID}, {$set: {text: itemValue}});
     res.send("success");
