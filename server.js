@@ -43,7 +43,6 @@ async function run() {
     }
 }
 
-//TODO: how to output log info into a file
 run().catch(async (e) => {
         logger.error(e)
         await client.close();
