@@ -2,6 +2,10 @@
 
 This is a simple Todo App that implemented with HTML,JS,node.js and MongoDB.
 
+[Live Demo](https://simpletodo-jroy.onrender.com/)
+
+Test username/passwd: test/test
+
 ## Features
 - [x] Create, Read, Update, Delete todos from webpage and MongoDB
 - [x] Use express module to process http request and response
